@@ -75,8 +75,8 @@ print ER "errors running dcc: $dcc_err\n";
 
 # seding, removing headers
 print ER "removing header from CircRNACount...\n";
-my$line=q{"sed -i -e "1d" CircRNACount"};
-my$sed=system("$line");
+#my$line=qq{"sed -i '1d' CircRNACount"};
+my$sed=`sed -i '1d' CircRNACount`;
 print "errors removing headers:\n$sed\n";
 
 # bedtools annotations
