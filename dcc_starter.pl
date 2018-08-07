@@ -73,11 +73,16 @@ print ER "running dcc..\n";
 my$dcc_err=system("DCC $bothlanesname -mt1 $laneonename.Chimeric.out.junction -mt2 $lanetwoname.Chimeric.out.junction -D -fg -an ../hg19_ens.gtf -Pi -M -Nr 1 1 -A ../hg19.fa -N -T 10 -an ../all_ref.gtf");
 print ER "errors running dcc: $dcc_err\n";
 
+# bedtools annotations
+print ER "using bedtools for annotation of CircRNACount file for $samplename...\n";
+my$betout=system("bedtools window -a CircRNACount -b /media/daniel/NGS1/RNASeq/find_circ/bed_files/Genes_RefSeq_hg19_09.20.2013.bed -w 1 >CircRNACount_annotated.tsv");
+print ER "errors annotating $samplename :\n$betout\n";
+
 
 
 # now parsing the output
 print ER "parsing in run_$samplename ...\n";
-my$err_running_dcc_outreader=system("perl ../dcc_outreader.pl CircRNACount CircCoordinates processed_run_$samplename.tsv $samplename");
+my$err_running_dcc_outreader=system("perl ../dcc_outreader.pl CircRNACount_annotated.tsv CircCoordinates processed_run_$samplename.tsv $samplename");
 print ER "errors parsing in run_$samplename/ : \n$err_running_dcc_outreader\n";
 
 my$total_time=((time)-$starttime)/60;
