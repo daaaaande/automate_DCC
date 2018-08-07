@@ -73,6 +73,12 @@ print ER "running dcc..\n";
 my$dcc_err=system("DCC $bothlanesname -mt1 $laneonename.Chimeric.out.junction -mt2 $lanetwoname.Chimeric.out.junction -D -fg -an ../hg19_ens.gtf -Pi -M -Nr 1 1 -A ../hg19.fa -N -T 10 -an ../all_ref.gtf");
 print ER "errors running dcc: $dcc_err\n";
 
+# seding, removing headers
+print ER "removing header from CircRNACount...\n";
+my$line=q{"sed -i -e "1d" CircRNACount"};
+my$sed=system("$line");
+print "errors removing headers:\n$sed\n";
+
 # bedtools annotations
 print ER "using bedtools for annotation of CircRNACount file for $samplename...\n";
 my$betout=system("bedtools window -a CircRNACount -b /media/daniel/NGS1/RNASeq/find_circ/bed_files/Genes_RefSeq_hg19_09.20.2013.bed -w 1 >CircRNACount_annotated.tsv");
