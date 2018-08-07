@@ -21,6 +21,8 @@ open(IZ,$linfile)|| die "$!";
 my@allllines=<IZ>;
 
 
+# renew annotations here 
+
 
 open(OU,">",$outfile)|| die "$!";
 # order has to be the same in those two files, otherwise this will not work
@@ -50,7 +52,10 @@ for (my $var = 0; $var < scalar(@alllines); $var++) {
       # get annotation
       my$annot=$cord_line_parts[3];
       # cleaning of annotation ?
-
+      # cleaning everything except first annotation
+      if($annot=~/\,/){
+        $annot=$`;
+      }
 
       # score is here junctiontype parameter from dcc
       my$score=$cord_line_parts[4];
