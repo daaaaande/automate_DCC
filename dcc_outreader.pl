@@ -20,8 +20,39 @@ my@alllines=<IN>;
 open(IZ,$linfile)|| die "$!";
 my@allllines=<IZ>;
 
+###
+# map file find_circ/Genes_RefSeq_hg19_09.20.2013.bed
+my%mapping_hash;
+my$mapfile="/media/daniel/NGS1/RNASeq/find_circ/bed_files/Genes_RefSeq_hg19_09.20.2013.bed";
 
-# renew annotations here 
+open(MA,$mapfile)|| die "$!";
+# now get coords
+my@allmap=<MA>;
+
+foreach my $line_map (@allmap) {
+  chomp $line_map;
+  my@linep=split(/\t/,$line_map);
+  my$chr=$linep[0];
+  my$start=$linep[1];
+  my$stop=$linep[2];
+  my$fullcoord="$chr:$start-$stop";# to be the key where
+  my$geneid=$linep[3];
+  $fullcoord=~s/\s+//g;
+  $mapping_hash{"$fullcoord"}="$geneid";
+  #print "mapping key:$fullcoord to value $geneid\n";
+
+}
+my@allmapco= keys(%mapping_hash);
+
+
+
+
+
+
+print "all coordinates are\n\n@allmapco\n";
+
+
+# renew annotations here
 
 
 open(OU,">",$outfile)|| die "$!";
@@ -41,6 +72,12 @@ for (my $var = 0; $var < scalar(@alllines); $var++) {
       my$start=$count_line_parts[1];
       my$end=$count_line_parts[2];
       my$fullcoords="$chrom:$start-$end";
+      # check for annotation
+
+      my$g="";
+
+
+
       # get quantification
       my$num_counts=$count_line_parts[4];
       # get strand
@@ -51,10 +88,18 @@ for (my $var = 0; $var < scalar(@alllines); $var++) {
       }
       # get annotation
       my$annot=$cord_line_parts[3];
+    #  print "annotation is start: $annot\t";
       # cleaning of annotation ?
       # cleaning everything except first annotation
       if($annot=~/\,/){
         $annot=$`;
+      #  print "more than one annot!\n";
+      }
+
+      #print "looking for annotation in file for :$fullcoords:\n";
+      if((grep(/$fullcoords/,@allmapco))){
+        $annot=$mapping_hash{$fullcoords};
+      #  print "found a match for $fullcoords\n";
       }
 
       # score is here junctiontype parameter from dcc
