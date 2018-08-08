@@ -195,7 +195,7 @@ for (my$i=0;$i<=scalar(@allelines);$i++){
 
 	}
 
-}
+}#+	NM_145177
 #print "$gene_nametaarray[0][2]\n";
 #print "allenames are\n";
 #print "should be only one sample name:$allenames[0]\n";
@@ -365,7 +365,7 @@ for(my$count=0;$count<scalar(@allecooords);$count++){
 	chomp $line;
 	$basicinfo=~s/\n//g;
 	$gene_name=~s/\n//g;
-	if(((($circcand=~/\:/)&&($presencething=~/[a-z]/)))){
+	if(((($circcand=~/\:/)&&($presencething=~/.*/)))){
 		my$linestring="$circcand\t$basicinfo\t$gene_name\t$circn\t$allsamplehit\t$ni\t$presencething\t$allsamplelines\n";
 		$linestring  =~s/\t\t/\t/g;
 
@@ -373,7 +373,7 @@ for(my$count=0;$count<scalar(@allecooords);$count++){
 	 	$linestring="";
 	}
 		else{			# in case something with the line is wrong
-			print "error in line: circand is $circcand \n basicinfo is $basicinfo \n and $presencething is $presencething\n";
+			print "error in line: circcand is $circcand \n basicinfo is $basicinfo \n and presencething is $presencething\n";
 		}
  }
 	#						|				|				|			|							|				|									|								$ni												t$allquas			$allsamplelines one after another
