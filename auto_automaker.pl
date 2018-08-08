@@ -45,15 +45,27 @@ foreach my $singleline (@lines){
 
 }
 
+my$date= localtime();
+$date=~s/\s+/_/g;
+mkdir "all_run_$date";
+
+
 foreach my $groupname (@groups){
 	my$errseding=system("sed -i '1d' $groupname/*.tsv"); # will remove first line from steptwo output i.e headers
 	my$errcat=system("cat $groupname/*.tsv >$groupname/allsites_bedgroup_$groupname.csv");
 	my$errmatxrix=system("perl matrixmaker.pl $groupname/allsites_bedgroup_$groupname.csv $groupname/allcircs_matrixout.txt");
 	my$matrtmaker=system("perl matrixtwo.pl $groupname/allcircs_matrixout.txt $groupname/allc_matrixtwo.tsv");
 	print ER "errors catting $groupname .csv files together:\n$errcat\n";
+	system("cp $groupname/allsites_bedgroup_$groupname.csv all_run_$date/");
+
 	print ER "errors making matrix for $groupname/allsites_bedgroup_$groupname.csv :\n$errmatxrix\n";
 	print ER "errors making second matrix for $groupname/allsites_bedgroup_$groupname.csv :\n$matrtmaker\n";
 
 }
+
+system("cat all_run_$date/* >all_run_$date.allbeds.out");
+system("perl matrixmaker.pl all_run_$date/all_run_$date.allbeds.out all_run_$date/allsamples_matrix.tsv");
+system("perl matrixtwo.pl all_run_$date/allsamples_matrix.tsv all_run_$date/allsamples_m_heatmap.tsv");
+
 
 print ER "finished with all groups\n";
