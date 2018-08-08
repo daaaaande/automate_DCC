@@ -5,7 +5,7 @@ use strict;
 my$currdir=`pwd`;
 my$starttime= time;
 
-open(ER,">>", "auto_log.log")|| die "$!";
+open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
 system("rm Chimeric.out.junction");
 system("rm fusion_junction.txt");
