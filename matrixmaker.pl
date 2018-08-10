@@ -6,7 +6,7 @@ use strict;
 ######################################## example run
 # perl matrixmaker.pl candidatelist_importantsamples_processed.csv important_sample_circpresencematrix.csv
 #########################################
-
+open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
 ########################################################################### input start
 #system("clear");
@@ -16,7 +16,6 @@ my $start = time;
 my$linfile= $ARGV[0];
 chomp $linfile;
 # candidatelist_auto_all_sites.bed.csv file created with steptwo.pl
-open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
 
 print ER "reading input file $linfile ...\n";
@@ -40,14 +39,14 @@ foreach my $mapline (@allemappings){
 	# fill a hash that is used later
 		chomp $mapline;
 		if(!($mapline=~/^$/)){
-			my@slit=split(/\s+/,$mapline);
-			my$genene=$slit[1];
+			my@slit=split(/\t+/,$mapline);
+			my$genene=$slit[11];
 			$genene =~ s/\s+//g; # remove emptieness
-			my$nnum=$slit[2];# will be key
+			my$nnum=$slit[10];# will be key
 			$nnum =~ s/\s+//g;
 			if($nnum=~/N/){ # empty lines do not help
 				$mapping{"$nnum"}="$genene";
-			#	print "mapping now gene $nnum to $genene \n";
+				#print "mapping now key  $nnum to $genene \n";
 			# hash now = mapping
 			# filled= key = NE_???
 			# value = gene name
@@ -164,7 +163,7 @@ my@allebasicinfo=();
 my@allecircarrays=();
 
 my@linieperline=();
-print ER "collecting sample names...\n";
+ print ER "collecting sample names...\n";
 for (my$i=0;$i<=scalar(@allelines);$i++){
 	# ignore first line
 	if ($i>=1){
@@ -196,7 +195,7 @@ for (my$i=0;$i<=scalar(@allelines);$i++){
 
 	}
 
-}#+	NM_145177
+}
 #print "$gene_nametaarray[0][2]\n";
 #print "allenames are\n";
 #print "should be only one sample name:$allenames[0]\n";
@@ -210,9 +209,9 @@ my%allinfoonesamplehash;
 my$sampleout;
 
 #$color_of{'apple'} = 'red';
-print ER "looking for circs for each sample...\n";
+ print ER "looking for circs for each sample...\n";
 foreach my $samplenames (@allenames){
-		print "looking for $samplenames circs...\n";# for each sample find all lines
+		print ER "looking for $samplenames circs...\n";# for each sample find all lines
 		$sampleout= `grep $samplenames $linfile`;	#
 		#print "$sampleout\n\n\n is grep $samplenames $linfile\n";
 		$allinfoonesamplehash{"$samplenames"} = "$sampleout";
@@ -238,7 +237,7 @@ open(OU,">",$outfile)|| die "$!";
 ############################################################################ actual output file craetion- sorting by coordinates ald listing info for each sample, adding some info
 
 # file header
-print OU "coordinates\tstrand\tRefseqID\tGene\tknown_circ\tnum_samples_present\ttotal_sum_unique_counts\tpresent_in_sample\t";
+print OU "coordinates\tstrand\tRefseqID\tGene\tknown_circ\tnum_samples_present\ttotal_sum_unique_counts\tqualities\tpresent_in_sample\t";
 foreach my $sampls  (@allenames) {
 	print OU "sample\t-unique_count\t-qualA\t-qualB\t"; # $sampls not in same order as below, need to change it
 }
@@ -314,6 +313,7 @@ for(my$count=0;$count<scalar(@allecooords);$count++){
 		foreach my $lineonesample (@everyline){
 			#$countm=0;
 		# see if coord match
+		my@hitsamples=();
 			if($lineonesample =~s/$circcand//){
 
 				chomp $lineonesample;
@@ -326,22 +326,28 @@ for(my$count=0;$count<scalar(@allecooords);$count++){
 				$lineonesample =~ tr/\.\s+//; # first remove the dot with space
 				$lineonesample =~ tr/\.//;# then withpout
 				$line="$line$lineonesample";
-				$allsamplelines="$allsamplelines$lineonesample";
-				$presencething="$presencething-$single_sample";
+
+				# check for presence of sample
+				# full name. i.e 697 should not match 697_r
+				if(!(grep(/^$single_sample$/,@hitsamples))){			# get all samplenames into @allenames
+
+					$allsamplelines="$allsamplelines$lineonesample";
+					push(@hitsamples,$single_sample);# if detected, get samplename into this array
+					$presencething="$presencething-$single_sample";
 				#print "lineonesqampleis:$lineonesample::\t";
 				# line has still the strand on it, need to remove it
-				$countm++;
-				$lineonesample =~/\s+[0-9]{1,4}\s+/;# only first hit is unique count
-				my$findnum = $&; # the unique count for each sample
-				my$twoquals=$'; # the two qualities into one
-				$twoquals =~ s/\s+/;/;
-				$allquas = "$allquas,$twoquals";
-				$allquas =~s/\s+//g;
-				$allquas=~s/[A-z]//g;
-				$totalcounts=$totalcounts + $findnum;
-				$ni=$totalcounts;
-				$allsamplehit++;
+					$countm++;
+					$lineonesample =~/\s+[0-9]{1,4}\s+/;# only first hit is unique count
+					my$findnum = $&; # the unique count for each sample
+					my$twoquals=$'; # the two qualities into one
+					$twoquals =~ s/\s+/;/;
+					$allquas = "$allquas,$twoquals";
+					$allquas =~s/\s+//g;
+					$totalcounts=$totalcounts + $findnum;
+					$ni=$totalcounts;
+					$allsamplehit++;
 				#print "totalcount $ni for $circcand\n";
+				}
 			}
 			else{# else space needs to be filled with zeros
 				#print "0\t0\t0\t0\t"	# did print a 0 for every non match in samplespace,
@@ -366,15 +372,15 @@ for(my$count=0;$count<scalar(@allecooords);$count++){
 	chomp $line;
 	$basicinfo=~s/\n//g;
 	$gene_name=~s/\n//g;
-	if(((($circcand=~/\:/)&&($presencething=~/.*/)))){
-		my$linestring="$circcand\t$basicinfo\t$gene_name\t$circn\t$allsamplehit\t$ni\t$presencething\t$allsamplelines\n";
+	if(((($circcand=~/\:/)&&($presencething=~/[a-z]/)))){
+		my$linestring="$circcand\t$basicinfo\t$gene_name\t$circn\t$allsamplehit\t$ni\t$allquas\t$presencething\t$allsamplelines\n";
 		$linestring  =~s/\t\t/\t/g;
 
 	 	print OU $linestring;
 	 	$linestring="";
 	}
 		else{			# in case something with the line is wrong
-			 print ER "error in line: circcand is $circcand \n basicinfo is $basicinfo \n and presencething is $presencething\n";
+			print ER "error in line: circand is $circcand \n basicinfo is $basicinfo \n and $presencething is $presencething\n";
 		}
  }
 	#						|				|				|			|							|				|									|								$ni												t$allquas			$allsamplelines one after another
