@@ -374,7 +374,7 @@ for(my$count=0;$count<scalar(@allecooords);$count++){
 	 	$linestring="";
 	}
 		else{			# in case something with the line is wrong
-			ER print "error in line: circcand is $circcand \n basicinfo is $basicinfo \n and presencething is $presencething\n";
+			 print ER "error in line: circcand is $circcand \n basicinfo is $basicinfo \n and presencething is $presencething\n";
 		}
  }
 	#						|				|				|			|							|				|									|								$ni												t$allquas			$allsamplelines one after another
