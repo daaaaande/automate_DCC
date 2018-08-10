@@ -16,7 +16,7 @@ my$error="";# collecting dump
 my@groups=();
 my$errortwo="";
 foreach my $singleline (@lines){
-	if($singleline =~ /[a-z]/g){
+	if($singleline =~ /[a-z]/gi){
 		chomp $singleline;
 		my@lineparts=split(/\s+/,$singleline);
 		my$fileone=$lineparts[0];
@@ -47,6 +47,9 @@ foreach my $singleline (@lines){
 
 my$date= localtime();
 $date=~s/\s+/_/g;
+$date=~s/[0-9]//g;
+$date=~s/\://g;
+$date=~s/\_\_//g;
 mkdir "all_run_$date";
 
 
@@ -63,9 +66,12 @@ foreach my $groupname (@groups){
 
 }
 
-system("cat all_run_$date/* >all_run_$date.allbeds.out");
-system("perl matrixmaker.pl all_run_$date/all_run_$date.allbeds.out all_run_$date/allsamples_matrix.tsv");
-system("perl matrixtwo.pl all_run_$date/allsamples_matrix.tsv all_run_$date/allsamples_m_heatmap.tsv");
+my$erralcat=system("cat all_run_$date/* >all_run_$date.allbeds.out");
+my$erralm1=system("perl matrixmaker.pl all_run_$date/all_run_$date.allbeds.out all_run_$date/allsamples_matrix.tsv");
+my$err_mat2=system("perl matrixtwo.pl all_run_$date/allsamples_matrix.tsv all_run_$date/allsamples_m_heatmap.tsv");
+
+print "error making files in all_run_$date :\ncat:\t$erralcat\nmatrix 1 creation:\t$erralm1 \nmatrix 2 creation:\n$err_mat2\n";
+
 
 
 print ER "finished with all groups\n";

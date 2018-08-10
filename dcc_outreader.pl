@@ -80,6 +80,7 @@ for (my $var = 0; $var < scalar(@alllines); $var++) {
       # build coordinates
       my$chrom=$count_line_parts[0];
       my$start=$count_line_parts[1];
+      $start=$start-1;
       my$end=$count_line_parts[2];
       my$fullcoords="$chrom:$start-$end";
       # check for annotation

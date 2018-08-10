@@ -25,7 +25,7 @@ chomp $infile2;
 my$samplename=$ARGV[2];
 chomp $samplename;
 
-
+print ER "-------------------------------------------------\nsample $samplename processing:\n";
 #### start of dcc for this sample
 mkdir "run_$samplename";
 
@@ -90,6 +90,8 @@ print ER "errors annotating $samplename :\n$betout\n";
 print ER "parsing in run_$samplename ...\n";
 my$err_running_dcc_outreader=system("perl ../dcc_outreader.pl CircRNACount_annotated.tsv CircCoordinates processed_run_$samplename.tsv $samplename");
 print ER "errors parsing in run_$samplename/ : \n$err_running_dcc_outreader\n";
+
+print ER "############################################################\nsample $samplename done :\n";
 
 my$total_time=((time)-$starttime)/60;
 print ER "done. \n\n took $total_time minutes for sample $samplename\n";
