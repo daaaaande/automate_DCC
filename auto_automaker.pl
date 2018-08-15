@@ -77,7 +77,7 @@ foreach my $groupname (@groups){
 
 }
 
-my$erralcat=system("cat all_run_$date/* >all_run_$date.allbeds.dcc.out");
+my$erralcat=system("cat all_run_$date/* >all_run_$date/all_run_$date.allbeds.dcc.out");
 my$erralm1=system("perl automate_DCC/matrixmaker.pl all_run_$date/all_run_$date.allbeds.dcc.out all_run_$date/allsamples_matrix.dcc.tsv");
 my$err_mat2=system("perl automate_DCC/matrixtwo.pl all_run_$date/allsamples_matrix.dcc.tsv all_run_$date/allsamples_m_heatmap.dcc.tsv");
 
