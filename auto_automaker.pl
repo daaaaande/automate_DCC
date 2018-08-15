@@ -3,6 +3,11 @@ use strict;
 
 system("clear");
 
+# cd /find_circ/dcc/automate_DCC
+# copy infile to /find_circ/dcc/
+# perl auto_automaker.pl infile
+
+
 open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
 chdir "../";
