@@ -20,4 +20,6 @@ automating DCC circular RNA detection
 >> expect about ~ 20 minutes runtime per sample with 10 CPUs
 
 ## outfiles:
-- for each sample, it creates a directory where it is started where all outputfiles  from dcc and the three(!) STAR alignemnts will be, additionally if you utilize groups it copies the .tsv files from dcc_outreader.pl into there and creates a matrixmaker.pl matrix 
+- for each sample, it creates a directory where it is started where all outputfiles  from dcc and the three(!) STAR alignemnts will be, additionally if you utilize groups it copies the .tsv files from dcc_outreader.pl into there and creates a matrixmaker.pl matrix
+
+# this set of scripts is not mature
