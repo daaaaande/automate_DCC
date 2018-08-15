@@ -5,6 +5,9 @@ use strict;
 my$currdir=`pwd`;
 my$starttime= time;
 
+chdir "../";
+
+
 my$infile=$ARGV[0];# CircRNACount file
 chomp $infile;
 my$linfile=$ARGV[1];# CircCoordinates file

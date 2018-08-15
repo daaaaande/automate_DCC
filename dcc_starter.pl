@@ -3,6 +3,7 @@ use strict;
 
 # starting vars
 my$currdir=`pwd`;
+chdir "../";
 my$starttime= time;
 
 open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
@@ -88,7 +89,7 @@ print ER "errors annotating $samplename :\n$betout\n";
 
 # now parsing the output
 print ER "parsing in run_$samplename ...\n";
-my$err_running_dcc_outreader=system("perl ../dcc_outreader.pl CircRNACount_annotated.tsv CircCoordinates processed_run_$samplename.tsv $samplename");
+my$err_running_dcc_outreader=system("perl ../automate_DCC/dcc_outreader.pl CircRNACount_annotated.tsv CircCoordinates processed_run_$samplename.tsv $samplename");
 print ER "errors parsing in run_$samplename/ : \n$err_running_dcc_outreader\n";
 
 print ER "############################################################\nsample $samplename done :\n";

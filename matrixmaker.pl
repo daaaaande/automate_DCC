@@ -13,6 +13,8 @@ open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
 my $start = time;
 
+chdir "../";
+
 my$linfile= $ARGV[0];
 chomp $linfile;
 # candidatelist_auto_all_sites.bed.csv file created with steptwo.pl

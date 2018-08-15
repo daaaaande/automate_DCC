@@ -5,6 +5,7 @@ system("clear");
 
 open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
+chdir "../";
 
 my$inputfile=$ARGV[0];
 chomp$inputfile;
@@ -27,7 +28,7 @@ foreach my $singleline (@lines){
 		chomp $filetwo;
 		print ER "##############################################################\n";
 		print ER "finding circs in sample $samplename...\n";
-		$error=system("perl dcc_starter.pl $fileone $filetwo $samplename");
+		$error=system("perl automate_DCC/dcc_starter.pl $fileone $filetwo $samplename");
 		#my$err2=system("perl  run_$samplename/CIRCexplorer_circ.txt run_$samplename/$samplename.processed.tsv $samplename");
 		# will dump file into run_$samplename/$samplename_processed.tsv, this to be done for every file
 
@@ -59,8 +60,8 @@ mkdir "all_run_$date";
 foreach my $groupname (@groups){
 	my$errseding=system("sed -i '1d' $groupname/*.tsv"); # will remove first line from steptwo output i.e headers
 	my$errcat=system("cat $groupname/*.tsv >$groupname/allsites_bedgroup_$groupname.csv");
-	my$errmatxrix=system("perl matrixmaker.pl $groupname/allsites_bedgroup_$groupname.csv $groupname/allcircs_matrixout.txt");
-	my$matrtmaker=system("perl matrixtwo.pl $groupname/allcircs_matrixout.txt $groupname/allc_matrixtwo.tsv");
+	my$errmatxrix=system("perl automate_DCC/matrixmaker.pl $groupname/allsites_bedgroup_$groupname.csv $groupname/allcircs_matrixout.txt");
+	my$matrtmaker=system("perl automate_DCC/matrixtwo.pl $groupname/allcircs_matrixout.txt $groupname/allc_matrixtwo.tsv");
 	print ER "errors catting $groupname .csv files together:\n$errcat\n";
 	system("cp $groupname/allsites_bedgroup_$groupname.csv all_run_$date/");
 
