@@ -13,7 +13,7 @@ open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
 my $start = time;
 
-chdir "../";
+#chdir "../";
 
 my$linfile= $ARGV[0];
 chomp $linfile;
