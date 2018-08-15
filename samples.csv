@@ -1,5 +1,5 @@
-03_697_R1_trimmed.fastq	03_697_R2_trimmed.fastq	697	test1
-1R_R1_trimmed.fastq	1R_R2_trimmed.fastq	hal01_r	test2
-3R_R1_trimmed.fastq	3R_R2_trimmed.fastq	697_r	test1
-HAL01_R1_trimmed.fastq	HAL01_R2_trimmed.fastq	hal01	test2
+03_697_R1_trimmed.fastq	03_697_R2_trimmed.fastq	l697	ltest1
+1R_R1_trimmed.fastq	1R_R2_trimmed.fastq	lhal01_r	ltest2
+3R_R1_trimmed.fastq	3R_R2_trimmed.fastq	l697_r	ltest1
+HAL01_R1_trimmed.fastq	HAL01_R2_trimmed.fastq	lhal01	ltest2
 
