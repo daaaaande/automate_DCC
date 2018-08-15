@@ -31,8 +31,10 @@ foreach my $singleline (@lines){
 		chomp $samplename;
 		chomp $fileone;
 		chomp $filetwo;
+		my$tim=localtime();
 		print ER "##############################################################\n";
-		print ER "finding circs in sample $samplename...\n";
+		print ER "starting @ $tim \nfinding circs in sample $samplename with DCC ...\n";
+
 		$error=system("perl automate_DCC/dcc_starter.pl $fileone $filetwo $samplename");
 		#my$err2=system("perl  run_$samplename/CIRCexplorer_circ.txt run_$samplename/$samplename.processed.tsv $samplename");
 		# will dump file into run_$samplename/$samplename_processed.tsv, this to be done for every file
