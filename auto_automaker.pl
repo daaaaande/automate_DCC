@@ -59,12 +59,12 @@ foreach my $singleline (@lines){
 
 }
 
-my$date= localtime();
+my$date= localtime(); # create a folder where all samples are processed together into one matrix one
 $date=~s/\s+/_/g;
 $date=~s/[0-9]//g;
 $date=~s/\://g;
 $date=~s/\_\_//g;
-mkdir "all_run_$date";
+mkdir "all_run_$date";	# date is now only THU_JUN
 
 
 
