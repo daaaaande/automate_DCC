@@ -42,6 +42,9 @@ foreach my $singleline (@lines){
 		print ER "errors:\n$error\n\n";
 		$errthre=system("rm run_$samplename/$samplename* ");
 		print ER "errors removing tmpfiles for sample $samplename:\n $errthre\n";
+		#deleting the copies of .fastq files afterwards in dcc and circexplorer to not crowd the hdd
+		my$erdel=system("rm $fileone $filetwo");
+		print ER "errors removing fastqs for sample $samplename:\n $erdel\n";
 		if($groupname=~/[a-z]/gi){
 			if(!(grep(/$groupname/,@groups))){ # check if group already present
 				mkdir $groupname;		# IF NOT, MAKE GROUPDIR
@@ -62,6 +65,7 @@ $date=~s/[0-9]//g;
 $date=~s/\://g;
 $date=~s/\_\_//g;
 mkdir "all_run_$date";
+
 
 
 foreach my $groupname (@groups){
