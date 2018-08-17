@@ -43,7 +43,7 @@ foreach my $singleline (@lines){
 		$errthre=system("rm run_$samplename/$samplename* ");
 		print ER "errors removing tmpfiles for sample $samplename:\n $errthre\n";
 		#deleting the copies of .fastq files afterwards in dcc and circexplorer to not crowd the hdd
-		my$erdel=system("rm $fileone $filetwo");
+	#	my$erdel=system("rm $fileone $filetwo");
 		print ER "errors removing fastqs for sample $samplename:\n $erdel\n";
 		if($groupname=~/[a-z]/gi){
 			if(!(grep(/$groupname/,@groups))){ # check if group already present
