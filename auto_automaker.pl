@@ -10,7 +10,7 @@ system("clear");
 
 open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
-chdir "../";
+chdir "../";		# expects infile in parent dir, where all the processing will be handled
 
 my$inputfile=$ARGV[0];
 chomp$inputfile;

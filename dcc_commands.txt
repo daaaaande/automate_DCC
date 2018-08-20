@@ -11,37 +11,8 @@ cd ..
 mkdir mate_2
 # alignment 3/media/daniel/NGS1/RNASeq/find_circ/circexplorer/CIRCexplorer/circexplorer1_starter_1.pl
 STAR --runThreadN 10 --genomeDir ../ --outSAMtype None --readFilesIn ../HAL01_R2_trimmed.fastq --outFileNamePrefix halo1_r --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15
-# then 
+# then
 DCC sample1/halo1_rChimeric.out.junction -mt1 mate_1/halo1_rChimeric.out.junction -mt2 mate_2/halo1_rChimeric.out.junction -D -fg -an hg19_ens.gtf -Pi -M -Nr 1 1 -A hg19.fa -N -T 10 -an hg19_ref1.gtf
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# create file samplesheet 
-atom samplesheet &
-# fill in there all full directories to samples/cimout to
-#> less samplesheet
-# > /media/daniel/NGS1/RNASeq/find_circ/dcc/sample1/halo1_rChimeric.out.junction
-# fill in mate1 and mate 2 files with full paths to files
-#> less mate1
-# /media/daniel/NGS1/RNASeq/find_circ/dcc/mate_1/halo1_rChimeric.out.junction
-#> less mate2
-# /media/daniel/NGS1/RNASeq/find_circ/dcc/mate_2/halo1_rChimeric.out.junction
-#
 
 
 # run DCC
