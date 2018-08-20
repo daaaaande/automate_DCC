@@ -20,6 +20,17 @@ my$error="";# collecting dump
 my@groups=();
 my$errortwo="";
 my$errthre="";
+
+
+my$date= localtime(); # create a folder where all samples are processed together into one matrix one
+$date=~s/\s+/_/g;
+$date=~s/[0-9]//g;
+$date=~s/\://g;
+$date=~s/\_\_//g;
+mkdir "all_run_$date";	# date is now only THU_JUN
+
+
+
 foreach my $singleline (@lines){
 	if($singleline =~ /[a-z]/gi){
 		chomp $singleline;
@@ -59,12 +70,6 @@ foreach my $singleline (@lines){
 
 }
 
-my$date= localtime(); # create a folder where all samples are processed together into one matrix one
-$date=~s/\s+/_/g;
-$date=~s/[0-9]//g;
-$date=~s/\://g;
-$date=~s/\_\_//g;
-mkdir "all_run_$date";	# date is now only THU_JUN
 
 
 
