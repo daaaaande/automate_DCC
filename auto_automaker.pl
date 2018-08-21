@@ -22,12 +22,9 @@ my$errortwo="";
 my$errthre="";
 
 
-my$date= localtime(); # create a folder where all samples are processed together into one matrix one
-$date=~s/\s+/_/g;
-$date=~s/[0-9]//g;
-$date=~s/\://g;
-$date=~s/\_\_//g;
-mkdir "all_run_$date";	# date is now only THU_JUN
+my$ndir=$ARGV[1];
+chomp $ndir;
+mkdir "$ndir";
 
 
 
@@ -79,21 +76,21 @@ foreach my $groupname (@groups){
 	my$errmatxrix=system("perl automate_DCC/matrixmaker.pl $groupname/allsites_bedgroup_$groupname.csv $groupname/allcircs_matrixout.txt");
 	my$matrtmaker=system("perl automate_DCC/matrixtwo.pl $groupname/allcircs_matrixout.txt $groupname/allc_matrixtwo.tsv");
 	print ER "errors catting $groupname .csv files together:\n$errcat\n";
-	system("cp $groupname/allsites_bedgroup_$groupname.csv all_run_$date/");
+	system("cp $groupname/allsites_bedgroup_$groupname.csv $ndir/");
 
 	print ER "errors making matrix for $groupname/allsites_bedgroup_$groupname.csv :\n$errmatxrix\n";
 	print ER "errors making second matrix for $groupname/allsites_bedgroup_$groupname.csv :\n$matrtmaker\n";
 
 }
 
-my$erralcat=system("cat all_run_$date/* >all_run_$date/all_run_$date.allbeds.dcc.out");
-my$erralm1=system("perl automate_DCC/matrixmaker.pl all_run_$date/all_run_$date.allbeds.dcc.out all_run_$date/allsamples_matrix.dcc.tsv");
-my$err_mat2=system("perl automate_DCC/matrixtwo.pl all_run_$date/allsamples_matrix.dcc.tsv all_run_$date/allsamples_m_heatmap.dcc.tsv");
+my$erralcat=system("cat $ndir/* >$ndir/$ndir.allbeds.dcc.out");
+my$erralm1=system("perl automate_DCC/matrixmaker.pl $ndir/$ndir.allbeds.dcc.out $ndir/allsamples_matrix.dcc.tsv");
+my$err_mat2=system("perl automate_DCC/matrixtwo.pl $ndir/allsamples_matrix.dcc.tsv $ndir/allsamples_m_heatmap.dcc.tsv");
 
-print ER "error making files in all_run_$date :\ncat:\t$erralcat\nmatrix 1 creation:\t$erralm1 \nmatrix 2 creation:\n$err_mat2\n";
+print ER "error making files in $ndir :\ncat:\t$erralcat\nmatrix 1 creation:\t$erralm1 \nmatrix 2 creation:\n$err_mat2\n";
 
 # now copy two matrix files into find_circ dir
-my$errtransfer=system("cp all_run_$date/*.tsv /media/daniel/NGS1/RNASeq/find_circ/all_run_$date/");
+my$errtransfer=system("cp $ndir/*.tsv /media/daniel/NGS1/RNASeq/find_circ/$ndir/");
 print ER "transfering matrix to find_circ dir errors: \n$errtransfer\n";
 
 print ER "finished with all groups\n";
