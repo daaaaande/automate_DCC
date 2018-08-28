@@ -71,7 +71,7 @@ print ER "errors during STAR lane 2 alignment:\n $err_star_line2\n";
 my$bothlanesname="$samplename.Chimeric.out.junction";
 ##
 print ER "running dcc..\n";
-my$dcc_err=system("DCC $bothlanesname -mt1 $laneonename.Chimeric.out.junction -mt2 $lanetwoname.Chimeric.out.junction -D -fg -an ../hg19_ens.gtf -Pi -M -Nr 1 1 -A ../hg19.fa -N -T 10 -an ../all_ref.gtf");
+my$dcc_err=system("DCC $bothlanesname -mt1 $laneonename.Chimeric.out.junction -mt2 $lanetwoname.Chimeric.out.junction -D -fg -an ../hg19_ens.gtf -Pi -M -Nr 2 1 -A ../hg19.fa -N -T 10 -an ../all_ref.gtf");
 print ER "errors running dcc: $dcc_err\n";
 
 # seding, removing headers
