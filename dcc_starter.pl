@@ -38,7 +38,7 @@ chdir "run_$samplename";
 print ER "doing mate STAR alignment...\n";
 # start DCC in find_circ/dcc/
 # STAR --runThreadN 10 --genomeDir . --outSAMtype BAM SortedByCoordinate --readFilesIn HAL01_R1_trimmed.fastq HAL01_R2_trimmed.fastq --outFileNamePrefix halo1_r --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15
-my$tophatout=system("STAR --runThreadN 10 --genomeDir ../ --outSAMtype BAM SortedByCoordinate --readFilesIn ../$infile1 ../$infile2 --outFileNamePrefix $samplename. --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15");
+my$tophatout=system("STAR --runThreadN 10 --genomeDir ../ --outSAMtype BAM SortedByCoordinate --readFilesIn ../../$infile1 ../../$infile2 --outFileNamePrefix $samplename. --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15");
 # creates auto_$samplename dir in test/
 print ER "errors during STAR alignment:\n $tophatout\n";
 
@@ -52,12 +52,12 @@ my$lanetwoname="lane_2$samplename";
 # alignment first read .fastq file
 print ER "doing line 1 STAR alignment...\n";
 
-my$err_star_line1=system("STAR --runThreadN 10 --genomeDir ../ --outSAMtype None --readFilesIn ../$infile1 --outFileNamePrefix $laneonename. --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15");
+my$err_star_line1=system("STAR --runThreadN 10 --genomeDir ../ --outSAMtype None --readFilesIn ../../$infile1 --outFileNamePrefix $laneonename. --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15");
 print ER "errors during STAR lane 1 alignment:\n $err_star_line1\n";
 
 print ER "doing line 2 STAR alignment...\n";
 
-my$err_star_line2=system("STAR --runThreadN 10 --genomeDir ../ --outSAMtype None --readFilesIn ../$infile2 --outFileNamePrefix $lanetwoname. --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15");
+my$err_star_line2=system("STAR --runThreadN 10 --genomeDir ../ --outSAMtype None --readFilesIn ../../$infile2 --outFileNamePrefix $lanetwoname. --outReadsUnmapped Fastx --outSJfilterOverhangMin 15 15 15 15 --alignSJoverhangMin 15 --alignSJDBoverhangMin 15 --seedSearchStartLmax 30 --outFilterMultimapNmax 20 --outFilterScoreMin 1 --outFilterMatchNmin 1 --outFilterMismatchNmax 2 --chimSegmentMin 15 --chimScoreMin 15 --chimScoreSeparation 10 --chimJunctionOverhangMin 15");
 print ER "errors during STAR lane 2 alignment:\n $err_star_line2\n";
 
 
