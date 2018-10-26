@@ -10,7 +10,7 @@ system("clear");
 
 open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 
-chdir "../";		# expects infile in parent dir, where all the processing will be handled
+chdir "/media/daniel/NGS1/RNASeq/find_circ/dcc";		# expects infile in parent dir, where all the processing will be handled
 
 my$inputfile=$ARGV[0];
 chomp$inputfile;

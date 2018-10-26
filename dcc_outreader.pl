@@ -44,7 +44,7 @@ for (my $var = 0; $var < scalar(@alllines); $var++) {
       $start=$start-1;
       my$end=$count_line_parts[2];
       my$fullcoords="$chrom:$start-$end";
-      my$g="-1";
+      my$g="9";
       # get quantification
       my$num_counts=$count_line_parts[4];# still right
       # get strand
