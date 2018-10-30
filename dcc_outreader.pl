@@ -47,21 +47,23 @@ for (my $var = 0; $var < scalar(@alllines); $var++) {
       my$g="9";
       # get quantification
       my$num_counts=$count_line_parts[4];# still right
-      # get strand
-      my$strand= $count_line_parts[3];
-      # get annotation
-      my$annot=$count_line_parts[8];
-      # cleaning everything except first annotation
-      if($annot=~/\,/){
-        $annot=$`;
-        #print "more than one annot!\n";
+      if($num_counts>1){
+        # get strand
+        my$strand= $count_line_parts[3];
+        # get annotation
+        my$annot=$count_line_parts[8];
+        # cleaning everything except first annotation
+        if($annot=~/\,/){
+          $annot=$`;
+          #print "more than one annot!\n";
+        }
+        if((grep(/$fullcoords/,@allmapco))){
+          $g=$mapping_hash{$fullcoords};
+          #  print "found a match for $fullcoords\n";
+        }
+        my$line="$fullcoords\t$strand\t$samplename\t$num_counts\t$g\t$g\t$annot";
+        $line=~s/\n//g;
+        print OU "$line\n";
       }
-      if((grep(/$fullcoords/,@allmapco))){
-        $g=$mapping_hash{$fullcoords};
-        #  print "found a match for $fullcoords\n";
-      }
-      my$line="$fullcoords\t$strand\t$samplename\t$num_counts\t$g\t$g\t$annot";
-      $line=~s/\n//g;
-      print OU "$line\n";
   }
 }

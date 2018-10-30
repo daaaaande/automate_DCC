@@ -76,7 +76,9 @@ for (my$i=0;$i<scalar(@allelines);$i++){
 					my$namesmale=$parts[2];
 					if(!(grep(/$namesmale/,@allenames))){			# get all samplenames into @allenames
 						if($namesmale ne "sampleid"){
-							push (@allenames, $namesmale);
+								if(!($namesmale=~/chr\:/g)){ # check if mistaken for coordinates
+									push (@allenames, $namesmale);
+								}
 						}
 					}
 					if(!(grep(/$cord/,@allecooords))){			# get first threee columns into two arrays
