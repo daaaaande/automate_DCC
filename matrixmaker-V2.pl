@@ -70,20 +70,32 @@ for (my$i=0;$i<scalar(@allelines);$i++){
 				my$line=$lin;
 				if((!($line=~/coordinates/)) && ($line=~/[a-z]/)){			# check for empty line
 					my@parts=split(/\t+/,$line);
+					# add checks for consistent cord and sample name checking
+
 					my$cord=$parts[0];
-					my$strand=$parts[1];
-					my$Refseqid=$parts[6];
-					my$namesmale=$parts[2];
-					if(!(grep(/$namesmale/,@allenames))){			# get all samplenames into @allenames
-						if($namesmale ne "sampleid"){
-								if(!($namesmale=~/chr\:/g)){ # check if mistaken for coordinates
-									push (@allenames, $namesmale);
+					if($cord=~/chr/){
+						my$strand=$parts[1];
+						my$Refseqid=$parts[6];
+						if($Refseqid=~/N/ig){
+							my$namesmale=$parts[2];
+							if(!(grep(/$namesmale/,@allenames))){			# get all samplenames into @allenames
+								if($namesmale ne "sampleid"){
+									if(!($namesmale=~/chr/g)){ # check if mistaken for coordinates
+										push (@allenames, $namesmale);
+									}
+								}
+							}
+							if(!(grep(/$cord/,@allecooords))){			# get first threee columns into two arrays
+								if($cord=~/chr/){
+									push (@allecooords, $cord);
+									push ( @allebasicinfo, "$strand\t$Refseqid\t");
 								}
 						}
 					}
-					if(!(grep(/$cord/,@allecooords))){			# get first threee columns into two arrays
-						push (@allecooords, $cord);
-						push ( @allebasicinfo, "$strand\t$Refseqid\t");
+					}
+					else{
+						# no coord in line found
+						warn "mistake here in line $i  in file $linfile: coords should be $cord\t and sample should be $parts[2], but its not. \n";
 					}
 				}
 			}
@@ -115,7 +127,7 @@ foreach my $circline (@alleci){			# fill a hash that is used later
 close CI;
 ############################################# get all information from one sample into a hash , key is samplename and value is all information in one var
 foreach my $samplenames (@allenames){
-	#print ER "looking for $samplenames circs...\n";# for each sample find all lines
+#	print  "looking for $samplenames circs...\n";# for each sample find all lines
 	$sampleout= `grep -w $samplenames $linfile`;	#
 	#print "$sampleout\n\n\n is grep $samplenames $linfile\n";
 	$allinfoonesamplehash{"$samplenames"} = "$sampleout";
@@ -183,14 +195,29 @@ sub findc{
 		else{
 			$circn="unknown";
 		}
-		foreach my $single_sample (@samples) {# looking for each sample for each circ
+		foreach my $single_sample (@allenames) {# looking for each sample for each circ
 	  		my$allonesample= $allinfoonesamplehash{$single_sample};
-        		if($allonesample=~/$circcand*.*\n/gi){### is the circ is found in sample
-          			my$line_of_i=$&;
-          			my$lineonesample=$line_of_i; #declare the interesting line
-	    			my@hitsamples=();
-          			$lineonesample=~s/$circcand//;
-          			$lineonesample=~s/\n//;
+        		if($allonesample=~/$circcand*.*\n/gi){### is the circ is found in sample###
+						#
+						#
+						#
+						#starting to rework the line construction...
+						#
+						#
+							my$line_of_i=$&;
+          		my$lineonesample=$line_of_i; #declare the interesting line
+							$line_of_i=~/chr.*\t/;
+							my$crds="$&";
+							$line_of_i=~/\t[0-9]{1,6}/;
+							my$quant=$1;
+							my$qualities="$2,$3";
+##################################### below only shitty stuff, letting the mm1 handle it for now...
+	    				my@hitsamples=();
+
+      				 $lineonesample=~s /$circcand//;
+
+							$lineonesample=~s///;
+          		$lineonesample=~s/\n//;
 	    			chomp $lineonesample;
 	    			$lineonesample=~s/\t+\+//;	# removing the strand information from the hit
 	    			$lineonesample=~s/\t+\-//;
@@ -207,11 +234,17 @@ sub findc{
 	      			my$findnum = $&; # the unique count for each sample
 	      			my$twoquals=$'; # the two qualities into one
 	      			$twoquals =~ s/\s+/;/;
-	      			$allquas = "$allquas,$twoquals";
-	      			$allquas =~s/\s+//g;
-	      			$totalcounts=$totalcounts + $findnum;
-	      			$ni=$totalcounts;
-	      			$allsamplehit++;
+							if(!($allquas=~/N/g)){ # check for refseqid instead of number
+	      				$allquas = "$allquas,$twoquals";
+	      				$allquas =~s/\s+//g;
+	      				$totalcounts=$totalcounts + $findnum;
+	      				$ni=$totalcounts;
+	      				$allsamplehit++;
+							}
+							else{
+								# refseqid is recognized as strand...
+							warn "line not recognized :$line_of_i ,quality is not $allquas or $twoquals\t totalcounts are $totalcounts for sample $single_sample circ $circcand basicinfo $basicinfo \n";
+							}
 	    			}
 	  		}
         			else{# new: if circ not in all one samples
@@ -223,6 +256,9 @@ sub findc{
 		$gene_name=~s/\n//g;
 		if(((($circcand=~/\:/)&&($presencething=~/[A-z]/)))){
 			#hr10:93590679-93602148 -       NM_001142434    OGA     hsa_circ_0008170
+			if($allsamplelines=~/chr/){
+			warn "error in file: $allsamplelines should not include coordinates , whats the problem?\n";
+			}
 	  		my$linestring="$circcand\t$basicinfo\t$gene_name\t$circn\t$allsamplehit\t$ni\t$allquas\t$presencething\t$allsamplelines\n";
 	  		$linestring  =~s/\t\t/\t/g;
 	  		print OU $linestring;
