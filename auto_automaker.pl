@@ -83,14 +83,14 @@ foreach my $groupname (@groups){
 
 }
 
-my$erralcat=system("cat $ndir/* >$ndir/$ndir.allbeds.dcc.out");
-my$erralm1=system("nice perl automate_DCC/matrixmaker-V2.pl $ndir/$ndir.allbeds.dcc.out $ndir/allsamples_matrix.dcc.tsv");
-my$err_mat2=system("perl automate_DCC/matrixtwo.pl $ndir/allsamples_matrix.dcc.tsv $ndir/allsamples_m_heatmap.dcc.tsv");
+my$erralcat=system("cat $ndir/*.tsv >$ndir/$ndir.allbeds.dcc.out");
+my$erralm1=system("nice perl automate_DCC/matrixmaker-V2.pl $ndir/$ndir.allbeds.dcc.out $ndir/allsamples_matrix.dcc.mat1");
+my$err_mat2=system("perl automate_DCC/matrixtwo.pl $ndir/allsamples_matrix.dcc.mat1 $ndir/allsamples_m_heatmap.dcc.mat2");
 
 print ER "error making files in $ndir :\ncat:\t$erralcat\nmatrix 1 creation:\t$erralm1 \nmatrix 2 creation:\n$err_mat2\n";
 
 # now copy two matrix files into find_circ dir
-my$errtransfer=system("cp $ndir/*.tsv /media/daniel/NGS1/RNASeq/find_circ/$ndir/");
+my$errtransfer=system("cp $ndir/*.mat* /media/daniel/NGS1/RNASeq/find_circ/$ndir/");
 print ER "transfering matrix to find_circ dir errors: \n$errtransfer\n";
 
 print ER "finished with all groups\n";
