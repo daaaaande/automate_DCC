@@ -209,8 +209,8 @@ sub findc{
 							$line_of_i=~/chr.*\t/;
 							my$crds="$&";
 							$line_of_i=~/\t[0-9]{1,6}/;
-							my$quant=$1;
-							my$qualities="$2,$3";
+							#my$quant=$1;
+							#my$qualities="$2,$3";
 ##################################### below only shitty stuff, letting the mm1 handle it for now...
 	    				my@hitsamples=();
 
@@ -226,7 +226,7 @@ sub findc{
 	    			$lineonesample =~ s/NR_[0-9]{3,11}//g;
 	    			$lineonesample =~ s/\.\s+//; # first remove the dot with space
 	    			$lineonesample =~ tr/\.//;# then withpout
-						$lineonesample =~ s/chr[0-9]{0,3}.*\-[0-9]{1,98}\s+?//g;# remove coords sometimes mixed up in here 
+						$lineonesample =~ s/chr[0-9]{0,3}.*\-[0-9]{1,98}\s+?//g;# remove coords sometimes mixed up in here
 	    			if(!(grep(/^$single_sample$/,@hitsamples))){			# get all samplenames into @allenames
   	      			$allsamplelines="$allsamplelines$lineonesample";
 	      			push(@hitsamples,$single_sample);# if detected, get samplename into this array
