@@ -83,7 +83,7 @@ foreach my $groupname (@groups){
 
 }
 
-my$erralcat=system("cat $ndir/*.tsv >$ndir/$ndir.allbeds.dcc.out");
+my$erralcat=system("cat $ndir/*.csv >$ndir/$ndir.allbeds.dcc.out");
 my$er_check_in=`perl automate_DCC/matrix_infile_checker.pl $ndir/$ndir.allbeds.dcc.out`;
 print "checking the infile for DCC matrix in $ndir ...\n$er_check_in \n";
 my$erralm1=system("nice perl automate_DCC/matrixmaker-V3_A.pl $ndir/$ndir.allbeds.dcc.out $ndir/allsamples_matrix.dcc.mat1");
