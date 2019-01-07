@@ -36,6 +36,9 @@ foreach my $singleline (@lines){
 		my$filetwo=$lineparts[1];
 		my$samplename=$lineparts[2];
 		my$groupname=$lineparts[3];
+		if($groupname eq ''){ # empty or only space-char
+			$groupname="default_group_$ndir";
+		}
 		chomp $samplename;
 		chomp $fileone;
 		chomp $filetwo;
