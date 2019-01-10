@@ -173,6 +173,8 @@ sub findc{
 		$basicinfo =~ /N*[\+\-]{1}/; # find refseqid
 		my$tolookup = $';
 		chomp $tolookup;
+		$tolookup="N$tolookup"; # fix for missing N in refseqid
+		$tolookup=~s/NN/N/; # fix if fix above did not work
 		#print "finding information for circ $tolookup\n";
 		$tolookup =~s/\s+//g;
 		my$allsamplelines="";
