@@ -1,14 +1,33 @@
 #/usr/bin/perl -w
 use strict;
-require "/media/daniel/NGS1/RNASeq/find_circ/read_mapping.pl";
-use List::MoreUtils qw(uniq);
-#system("clear");
+require "/media/daniel/NGS1/RNASeq/find_circ/read_mapping.pl"; # module reading mapping file for additional information- can be ignored when useless
+use List::MoreUtils qw(uniq); # used to get to a list of unique samplenames later
+
 
 ############################################################ usage
 # perl matrixtwo.pl matrixmaker_outfile.csv matrixtwo_output.tsv
 ############################################################
+#			matrixtwo.pl
+#			- needs an infile -> the correct infile format is made by matrixmaker.pl as ouput, can directly given to matrixtwo
+#			- adds additional biologic information, but also removes information from the first matrix that is not used in the heatmap that will be created with the output from this script
+#			- needs output file name , outputs in a .tsv file format
+#     - will run in the dir where it was started
+#			- will output errors into ER file : /home/daniel/logfile_auto.log, can be changed
 
-#chdir "../";
+############## example input :
+#coordinates	strand	RefseqID	Gene	known_circ	num_samples_present	total_sum_unique_counts	qualities	present_in_sample	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB	sample	-unique_count	-qualA	-qualB
+#chr10:102683731-102685776	+	NM_001136123	SLF2	hsa_circ_0006654	16	88	,6;40,40;40,40;5,40;5,6;40,6;40,6;40,40;40,40;5,40;40,40;40,40;40,40;40,40;5,40;40,40;40	-run_hal01_test1a-run_697_r_test1a-run_hal01_r_test1a-run_hal01_r_test1c-run_hal01_test1c-run_hal01_test1d-run_hal01_test1b-run_697_r_test1c-run_hal01_r_test1b-run_697_test1c-run_697_r_test1b-run_697_test1e-run_697_r_test1d-run_hal01_r_test1d-run_697_test1a-run_697_test1d	run_hal01_test1a	5	6	40	run_697_r_test1a	7	40	40	run_hal01_r_test1a	7	40	5	run_hal01_r_test1c	7	40	5	run_hal01_test1c	5	6	40	run_hal01_test1d	5	6	40	run_hal01_test1b	5	6	40	run_697_r_test1c	7	40	40	run_hal01_r_test1b	7	40	5	run_697_test1c	3	40	40	run_697_r_test1b	7	40	40	run_697_test1e	3	40	40	run_697_r_test1d	7	40	40	run_hal01_r_test1d	7	40	5	run_697_test1a	3	40	40	run_697_test1d	3	40	40
+#chr10:102683734-102685776	+	NM_001136123	SLF2	unknown	4	8	,40;40,40;40,40;40,40;40	-run_697_r_test1a-run_697_r_test1c-run_697_r_test1b-run_697_r_test1d	run_hal01_test1a	0	0	0	run_697_r_test1a	2	40	40	run_hal01_r_test1a	0	0	0	run_hal01_r_test1c	0	0	0	run_hal01_test1c	0	0	0	run_hal01_test1d	0	0	0	run_hal01_test1b	0	0	0	run_697_r_test1c	2	40	40	run_hal01_r_test1b	0	0	0	run_697_test1c	0	0	0	run_697_r_test1b	2	40	40	run_697_test1e	0	0	0	run_697_r_test1d	2	40	40	run_hal01_r_test1d	0	0	0	run_697_test1a	0	0	0	run_697_test1d	0	0	0
+#
+############# example output :
+#
+#coordinates	refseqid	gene	circn	hallm	biom_desc	run_hal01_test1a	run_697_r_test1a	run_hal01_r_test1a	run_hal01_r_test1c	run_hal01_test1c	run_hal01_test1d	run_hal01_test1b	run_697_r_test1c	run_hal01_r_test1b	run_697_test1c	run_697_r_test1b	run_697_test1e	run_697_r_test1d	run_hal01_r_test1d	run_697_test1a	run_697_test1d
+#chr10:102683731-102685776	NM_001136123	SLF2	hsa_circ_0006654	none	SMC5-SMC6_complex_localization_factor_2_	5	7	7	7	5	5	5	7	7	3	7	3	7	7	3	3
+#chr10:102683734-102685776	NM_001136123	SLF2	unknown	none	SMC5-SMC6_complex_localization_factor_2_	0	2	0	0	0	0	0	2	0	0	2	0	2	0	0	0
+#
+#
+#
+#
 
 open(ER,'>>',"/home/daniel/logfile_auto.log")||die "$!";		# global logfile
 my $start = time;
@@ -92,10 +111,12 @@ for (my $var = 0; $var < scalar(@allelines); $var++) {
     # getting relevant information for each circ candidate ...
     my@lineparts=split(/\t/,$longline);
     my$coords=$lineparts[0];
+		my$strand=$lineparts[1];
     my$refseqID=$lineparts[2];
     my$gene=$lineparts[3];
     my$circn=$lineparts[4];
     # adding hallmark gene type
+	#	print "refseqid is $refseqID\n";
     if(grep(/$gene/,@allehallmarkg)){			# get all samplenames into @allenames)
   #  print "looking for $gene in gene mapping ---\n";
     # find hallmark class  and add to matrix file
@@ -121,8 +142,7 @@ for (my $var = 0; $var < scalar(@allelines); $var++) {
       $marti="NaN";
     }
 
-    push(@headers,"$coords\t$refseqID\t$gene\t$circn\t$hallm\t$marti\t");# header into array
-    #if($var==1){# to test first only the second line , later all lines
+    push(@headers,"$coords\t$strand\t$refseqID\t$gene\t$circn\t$hallm\t$marti\t");# header into array
       my$e=0;
       my$allthings="";
       foreach my$samplepos (@sampleuniqc){
@@ -135,8 +155,7 @@ for (my $var = 0; $var < scalar(@allelines); $var++) {
         $allthings="$allthings\t$lineparts[$samplepos]";
         #$alluniques[$var][$e]=$lineparts[$samplepos];# two-dimensional array
       }
-      push(@alluniques,$allthings);
-    #}
+      push(@alluniques,$allthings);# all unique count positions in .mat1 file
   }
   else{
   # header bar only- catch columns with samplenames in it and their position
@@ -160,7 +179,7 @@ for (my $var = 0; $var < scalar(@allelines); $var++) {
 # actual file creation:
 # header line in output file ...
 my@uniques= uniq @samplenames;
-print OUT"coordinates\trefseqid\tgene\tcircn\thallm\tbiom_desc\t";
+print OUT"coordinates\tstrand\trefseqid\tgene\tcircn\thallm\tbiom_desc\t";
 foreach my $sampl (@uniques){
   print OUT"$sampl\t";
 }
@@ -168,6 +187,7 @@ print OUT "\n";
 # now the real content, cleaning it from junk and then printing it
 for (my $v = 0; $v < scalar(@headers); $v++) {
   my$outline="$headers[$v]$alluniques[$v]";
+	# messy whitespace cleanup
   $outline=~s/\t\t+/\t/g;
   $outline=~s/\t\s+/\t/g;
 	$outline=~s/\s+\t/\t/g;
