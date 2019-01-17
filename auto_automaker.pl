@@ -80,7 +80,8 @@ foreach my $groupname (@groups){
 	my$errmatxrix=`nice perl  automate_DCC/matrixmaker-V3_A.pl $groupname/allsites_bedgroup_$groupname.csv $groupname/allcircs_matrixout.txt`;
 	my$matrtmaker=`perl automate_DCC/matrixtwo.pl $groupname/allcircs_matrixout.txt $groupname/allc_matrixtwo.tsv`;
 	print ER "errors catting $groupname .csv files together:\n$errcat\n";
-	`cp $groupname/allsites_bedgroup_$groupname.csv $ndir/`;
+	my$cp_k=`cp $groupname/allsites_bedgroup_$groupname.csv $ndir/`;
+	print ER "errors copying file$groupname/allsites_bedgroup_$groupname.csv  into $ndir : $cp_k\n";
 
 	print ER "errors making matrix for $groupname/allsites_bedgroup_$groupname.csv :\n$errmatxrix\n";
 	print ER "errors making second matrix for $groupname/allsites_bedgroup_$groupname.csv :\n$matrtmaker\n";
