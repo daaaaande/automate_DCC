@@ -1,3 +1,9 @@
+
+# a more up-to date and easy to use version available on GitLab!
+# https://gitlab.com/daaaaande/circs
+
+
+
 # automate_DCC
 automating DCC circular RNA detection
 
